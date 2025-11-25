@@ -42,11 +42,13 @@ header-includes:
 
 # Introduction
 
-(Write the introduction here)
+"adsadsds"
+
 
 # Dataset Description
 
 (Write about heart.csv here)
+
 
 # Data Preparation
 ```{r}
@@ -57,11 +59,18 @@ read.csv()
 
 # Exploratory Data Analysis
 
-(Plots, male vs female age)
 # Multinomial Logistic Regression — Theory
 
-(Here you write the general mathematical formula)
-(Explain how it differs from logistic regression)
+Question(1.1):
+
+We are using multinomial Logistic Regression because the response variable can take more than 2 categories.
+For these categories there is a separate set of coefficients and we choose one as the baseline. The coefficients
+describe how the predictors(age, sex, chol etc.) affect the probability of belonging to each outcome category.
+
+In this regression the response variable Y can take K-number of different categories.
+We have to pick one of the categories to be the baseline - category 0, for every other category - k = 1,2...,K-1.
+
+The model shows the probability of an observation belonging to category K using the multinomial logistic regression function:
 # Multinomial Logistic Regression
 
 (Fit model + interpretation)
