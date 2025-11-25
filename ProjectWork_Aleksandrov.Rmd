@@ -55,10 +55,44 @@ header-includes:
 heartData <- read.csv("heart.csv")
 head(heartData)
 ```
-read.csv()
 
 # Exploratory Data Analysis
+```{r}
+heartData$place   <- as.factor(heartData[["place"]])
+heartData$cp      <- as.factor(heartData[["cp"]])
 
+
+heartData$hdc     <- as.factor(heartData[["hdc"]])
+
+heartData$restecg <- as.factor(heartData[["restecg"]])
+
+heartData$sex   <- ifelse(heartData[["sex"]] == "Male", 1, 0)
+heartData$fbs   <- ifelse(heartData[["fbs"]] == TRUE, 1, 0)
+heartData$exang <- ifelse(heartData[["exang"]] == TRUE, 1, 0)
+
+heartData$trestbps[is.na(heartData$trestbps)] <- median(heartData$trestbps, na.rm = TRUE)
+heartData$chol[is.na(heartData$chol)] <- median(heartData$chol, na.rm = TRUE)
+heartData$thalch[is.na(heartData$thalch)] <- median(heartData$thalch, na.rm = TRUE)
+heartData$oldpeak[is.na(heartData$oldpeak)] <- median(heartData$oldpeak, na.rm = TRUE)
+heartData$ca <- NULL
+heartData$thal <- NULL
+heartData$slope <- NULL
+
+
+mostCommon_restecg <- names(sort(table(heartData$restecg), decreasing = TRUE))[1]
+heartData$restecg[is.na(heartData$restecg)] <- mostCommon_restecg
+
+mostCommon_fbs <- names(sort(table(heartData$fbs), decreasing = TRUE))[1]
+heartData$fbs[is.na(heartData$fbs)] <- mostCommon_fbs
+
+mostCommon_exang <- names(sort(table(heartData$exang), decreasing = TRUE))[1]
+heartData$exang[is.na(heartData$exang)] <- mostCommon_exang
+
+
+colSums(is.na(heartData))
+head(heartData)
+
+```
 # Multinomial Logistic Regression — Theory
 
 Question(1.1):
