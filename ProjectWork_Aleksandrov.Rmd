@@ -66,6 +66,9 @@ After restecg vs hdc barplot:
 Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
 
 
+hist
+Histograms show the distribution of the numeric variables. Some variables are skewed (especially oldpeak), and the plots help us understand the data before modeling.
+
 # Dataset Description
 
 (Write about heart.csv here)
@@ -154,7 +157,7 @@ head(heartData)
 # Exploratory Data Analysis
 
 ```{r, echo=FALSE}
-
+install.packages("ggplot2")
 library(ggplot2)
 ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
