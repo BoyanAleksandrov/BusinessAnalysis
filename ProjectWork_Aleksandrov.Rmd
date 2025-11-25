@@ -50,9 +50,89 @@ header-includes:
 (Write about heart.csv here)
 
 
+# Multinomial Logistic Regression — Theory
+
+Question(1.1):
+
+We are using multinomial Logistic Regression because the response variable can take more than 2 categories.
+For these categories there is a separate set of coefficients and we choose one as the baseline. The coefficients
+describe how the predictors(age, sex, chol etc.) affect the probability of belonging to each outcome category.
+
+In this regression the response variable Y can take K-number of different categories.
+We have to pick one of the categories to be the baseline - category 0, for every other category - k = 1,2...,K-1.
+
+The model shows the probability of an observation belonging to category K using the multinomial logistic regression function:
+
+$$
+P(Y = k \mid X) =
+\frac{\exp(\beta_{0k} + \beta_k^T X)}
+     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
+$$
+
+The probability of the baseline category is:
+
+$$
+P(Y = 0 \mid X) =
+\frac{1}
+     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
+$$
+
+
+# Data Preparation 
+
+There are several variables in the dataset containing missing values.In order to prepare the data for the multinomial logistic model,we observed how many missing values each variable had and saw that the variables ca, thal, and slope had extremely high numbers of missing values. Because these variables are categorical, and because imputing such a large amount of missing data would introduce strong bias, we decided to remove them from the dataset.
+For the remaining numeric variables with less missing values- (trestbps, chol, thalach, oldpeak) we applied median imputation.
+
+We chose this method because replacing each missing value with the median of the corresponding variable is a robust measure that is not affected by extreme values. 
+
+For the categorial variables with very few missing values, we replaced missing entries with the most frequent category (the mode).
+
+This approach ensures that there are no missing values before using the multinomial logistic regression model.
+
+```{r, echo=FALSE}
+
+heartData <- read.csv("heart.csv")
+
+heartData$place   <- as.factor(heartData[["place"]])
+heartData$cp      <- as.factor(heartData[["cp"]])
+
+
+heartData$hdc     <- as.factor(heartData[["hdc"]])
+
+heartData$restecg <- as.factor(heartData[["restecg"]])
+
+heartData$sex   <- ifelse(heartData[["sex"]] == "Male", 1, 0)
+heartData$fbs   <- ifelse(heartData[["fbs"]] == TRUE, 1, 0)
+heartData$exang <- ifelse(heartData[["exang"]] == TRUE, 1, 0)
+
+heartData$trestbps[is.na(heartData$trestbps)] <- median(heartData$trestbps, na.rm = TRUE)
+heartData$chol[is.na(heartData$chol)] <- median(heartData$chol, na.rm = TRUE)
+heartData$thalch[is.na(heartData$thalch)] <- median(heartData$thalch, na.rm = TRUE)
+heartData$oldpeak[is.na(heartData$oldpeak)] <- median(heartData$oldpeak, na.rm = TRUE)
+heartData$ca <- NULL
+heartData$thal <- NULL
+heartData$slope <- NULL
+
+
+mostCommon_restecg <- names(sort(table(heartData$restecg), decreasing = TRUE))[1]
+heartData$restecg[is.na(heartData$restecg)] <- mostCommon_restecg
+
+mostCommon_fbs <- names(sort(table(heartData$fbs), decreasing = TRUE))[1]
+heartData$fbs[is.na(heartData$fbs)] <- mostCommon_fbs
+
+mostCommon_exang <- names(sort(table(heartData$exang), decreasing = TRUE))[1]
+heartData$exang[is.na(heartData$exang)] <- mostCommon_exang
+
+
+colSums(is.na(heartData))
+head(heartData)
+
+```
+
+
 # Exploratory Data Analysis
 
-```{r}
+```{r, echo=FALSE}
 library(ggplot2)
 ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
@@ -106,83 +186,6 @@ ggplot(heartData, aes(x = age, fill = factor(hdc))) +
 
 ```
 
-
-# Data Preparation 
-
-There are several variables in the dataset containing missing values.In order to prepare the data for the multinomial logistic model,we observed how many missing values each variable had and saw that the variables ca, thal, and slope had extremely high numbers of missing values. Because these variables are categorical, and because imputing such a large amount of missing data would introduce strong bias, we decided to remove them from the dataset.
-For the remaining numeric variables with less missing values- (trestbps, chol, thalach, oldpeak) we applied median imputation.
-
-We chose this method because replacing each missing value with the median of the corresponding variable is a robust measure that is not affected by extreme values. 
-
-For the categorial variables with very few missing values, we replaced missing entries with the most frequent category (the mode).
-
-This approach ensures that there are no missing values before using the multinomial logistic regression model.
-
-```{r, echo=FALSE}
-
-heartData <- read.csv("heart.csv")
-
-heartData$place   <- as.factor(heartData[["place"]])
-heartData$cp      <- as.factor(heartData[["cp"]])
-
-
-heartData$hdc     <- as.factor(heartData[["hdc"]])
-
-heartData$restecg <- as.factor(heartData[["restecg"]])
-
-heartData$sex   <- ifelse(heartData[["sex"]] == "Male", 1, 0)
-heartData$fbs   <- ifelse(heartData[["fbs"]] == TRUE, 1, 0)
-heartData$exang <- ifelse(heartData[["exang"]] == TRUE, 1, 0)
-
-heartData$trestbps[is.na(heartData$trestbps)] <- median(heartData$trestbps, na.rm = TRUE)
-heartData$chol[is.na(heartData$chol)] <- median(heartData$chol, na.rm = TRUE)
-heartData$thalch[is.na(heartData$thalch)] <- median(heartData$thalch, na.rm = TRUE)
-heartData$oldpeak[is.na(heartData$oldpeak)] <- median(heartData$oldpeak, na.rm = TRUE)
-heartData$ca <- NULL
-heartData$thal <- NULL
-heartData$slope <- NULL
-
-
-mostCommon_restecg <- names(sort(table(heartData$restecg), decreasing = TRUE))[1]
-heartData$restecg[is.na(heartData$restecg)] <- mostCommon_restecg
-
-mostCommon_fbs <- names(sort(table(heartData$fbs), decreasing = TRUE))[1]
-heartData$fbs[is.na(heartData$fbs)] <- mostCommon_fbs
-
-mostCommon_exang <- names(sort(table(heartData$exang), decreasing = TRUE))[1]
-heartData$exang[is.na(heartData$exang)] <- mostCommon_exang
-
-
-colSums(is.na(heartData))
-head(heartData)
-
-```
-# Multinomial Logistic Regression — Theory
-
-Question(1.1):
-
-We are using multinomial Logistic Regression because the response variable can take more than 2 categories.
-For these categories there is a separate set of coefficients and we choose one as the baseline. The coefficients
-describe how the predictors(age, sex, chol etc.) affect the probability of belonging to each outcome category.
-
-In this regression the response variable Y can take K-number of different categories.
-We have to pick one of the categories to be the baseline - category 0, for every other category - k = 1,2...,K-1.
-
-The model shows the probability of an observation belonging to category K using the multinomial logistic regression function:
-
-$$
-P(Y = k \mid X) =
-\frac{\exp(\beta_{0k} + \beta_k^T X)}
-     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
-$$
-
-The probability of the baseline category is:
-
-$$
-P(Y = 0 \mid X) =
-\frac{1}
-     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
-$$
 
 # Multinomial Logistic Regression
 
