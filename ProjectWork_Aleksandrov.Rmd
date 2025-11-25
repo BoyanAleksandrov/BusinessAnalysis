@@ -6,7 +6,9 @@ author:
 
 abstract: "IF you wish, you may add here a short abstract of 100 words max."
 date:     "Last compiled on:   `r format(Sys.time(), '%d %B, %Y')`"
-output:   pdf_document
+output:   
+  pdf_document:
+    fig_crop: true
 fontsize: 12pt
 header-includes:
   \usepackage[T1]{fontenc}
@@ -14,6 +16,7 @@ header-includes:
   \usepackage{lmodern}
   \usepackage{lipsum}
   \usepackage{fancyhdr}
+  \usepackage{float} 
   \pagestyle{fancy}
   \renewcommand{\headrulewidth}{0pt}
   \fancyhf{}
@@ -40,27 +43,19 @@ header-includes:
   \makeatletter
 ---
 
+
+
 # Introduction
 
 "adsadsds"
-Before establishing the multinomial logistic regression model, we looked at some of the predictors' visual variations over the response variable hdc's various levels. This enables us to recognise potential patterns and comprehend which factors might be helpful in predicting the seriousness of heart disease.
 
-To investigate numerical factors like cholesterol, resting blood pressure, maximal heart rate, and ST depression, we employed boxplots. These charts illustrate the variations in these variables' distributions among the various categories of heart disease.
-
-To determine how the frequency of each category varies throughout the hdc levels, we made barplots for categorical variables including the type of chest discomfort and the resting ECG result.
-
-An introductory comprehension of the connections between predictors and the response variable is provided by this visual investigation.
 
 9999999
 
-After cholesterol boxplot:
-From the boxplot, cholesterol tends to be higher in some of the higher heart disease categories, although the variability overlaps across groups.
 
-After trestbps boxplot:
-Blood pressure appears to increase slightly for patients with higher heart disease categories, but the differences are not very clear.
 
-After cp vs hdc barplot:
-Certain chest pain types appear more often in higher heart disease categories, suggesting that chest pain type may be a useful predictor.
+
+
 
 After restecg vs hdc barplot:
 Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
@@ -156,8 +151,20 @@ head(heartData)
 
 # Exploratory Data Analysis
 
-```{r, echo=FALSE}
-install.packages("ggplot2")
+
+Before establishing the multinomial logistic regression model, we looked at some of the predictors' visual variations over the response variable hdc's various levels. This enables us to recognise potential patterns and comprehend which factors might be helpful in predicting the seriousness of heart disease.
+
+To investigate numerical factors like cholesterol, resting blood pressure, maximal heart rate, and ST depression, we employed boxplots. These charts illustrate the variations in these variables' distributions among the various categories of heart disease.
+
+To determine how the frequency of each category varies throughout the hdc levels, we made barplots for categorical variables including the type of chest discomfort and the resting ECG result.
+
+An introductory comprehension of the connections between predictors and the response variable is provided by this visual investigation.
+
+
+After cholesterol boxplot:
+From the boxplot, cholesterol tends to be higher in some of the higher heart disease categories, although the variability overlaps across groups.
+```{r chol_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
+
 library(ggplot2)
 ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
@@ -165,7 +172,12 @@ ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
        title = "Cholesterol levels across heart disease categories") +
   theme_minimal() +
   theme(legend.position = "none")
+```
 
+After Resting Blood Pressure boxplot:
+Blood pressure appears to increase slightly for patients with higher heart disease categories, but the differences are not very clear.
+
+```{r rest_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = factor(hdc), y = trestbps, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
   labs(x = "HDC", y = "Resting Blood Pressure",
@@ -173,14 +185,21 @@ ggplot(heartData, aes(x = factor(hdc), y = trestbps, fill = factor(hdc))) +
   theme_minimal() +
   theme(legend.position = "none")
 
+```
 
+```{r mheart_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = factor(hdc), y = thalch, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
   labs(x = "HDC", y = "Maximum heart level",
        title = "Maximum heart level across heart disease categories") +
   theme_minimal() +
   theme(legend.position = "none")
+```
 
+After cp vs hdc barplot:
+Certain chest pain types appear more often in higher heart disease categories, suggesting that chest pain type may be a useful predictor.
+
+```{r cp_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
   geom_bar(position = "fill") +
   labs(x = "Chest Pain Type",
@@ -189,7 +208,12 @@ ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
        fill = "hdc") +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal()
+```
 
+After restecg vs hdc barplot:
+Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
+
+```{r ecg_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
   geom_bar(position = "fill") +
   labs(x = "Resting ECG Type",
@@ -198,7 +222,10 @@ ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
        fill = "hdc") +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal()
+```
 
+
+```{r age_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = age, fill = factor(hdc))) +
   geom_histogram(alpha = 0.7, position = "identity", bins = 40) +
   labs(
