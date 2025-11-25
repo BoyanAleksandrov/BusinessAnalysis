@@ -61,6 +61,9 @@ After restecg vs hdc barplot:
 Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
 
 
+hist
+Histograms show the distribution of the numeric variables. Some variables are skewed (especially oldpeak), and the plots help us understand the data before modeling.
+
 # Dataset Description
 
 (Write about heart.csv here)
@@ -147,6 +150,7 @@ head(heartData)
 
 
 # Exploratory Data Analysis
+
 
 Before establishing the multinomial logistic regression model, we looked at some of the predictors' visual variations over the response variable hdc's various levels. This enables us to recognise potential patterns and comprehend which factors might be helpful in predicting the seriousness of heart disease.
 
@@ -240,10 +244,23 @@ ggplot(heartData, aes(x = age, fill = factor(hdc))) +
   theme_minimal()
 
 ```
+Distribution of age across HDC
+Patients with higher heart disease categories tend to be older, with the age distribution shifting toward later decades as HDC increases.
 
-By looking at the box plot and p-test results we can conclude that we do not have statistically significant evidence that males and females have different mean ages.
+Cholesterol levels across heart disease categories
+Cholesterol levels appear broadly similar across categories, though higher HDC groups show slightly more variability.
 
-With the p-test being bellow 0.05, we get the confirmation that the difference is not strong enough to be called significant.
+ Resting blood pressure across heart disease categories
+Resting blood pressure shows a mild increasing trend with higher HDC, but overall differences between groups are modest.
+
+ Maximum heart rate across heart disease categories
+Patients with higher HDC values generally demonstrate lower maximum heart rates compared to those without heart disease.
+
+ Proportion of heart disease category by chest pain type
+Atypical and non-anginal chest pain types contain a higher proportion of severe heart disease cases compared to typical angina.
+
+ Proportion of heart disease category by resting ECG type
+ST-T abnormalities and LV hypertrophy are associated with a greater share of higher heart disease categories compared to normal ECG results.
 
 ```{r}
 
