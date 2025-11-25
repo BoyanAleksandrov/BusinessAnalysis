@@ -2,7 +2,7 @@
 title:    "TDS10 Final Project"
 author:   
 - "Aleksandrov Boyan, 320961, b.aleksandrov@studenti.luiss.it"
-- ""
+- "Nishtelkova Maria"
 
 abstract: "IF you wish, you may add here a short abstract of 100 words max."
 date:     "Last compiled on:   `r format(Sys.time(), '%d %B, %Y')`"
