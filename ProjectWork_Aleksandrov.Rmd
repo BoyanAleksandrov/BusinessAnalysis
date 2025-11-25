@@ -50,13 +50,64 @@ header-includes:
 (Write about heart.csv here)
 
 
-# Data Preparation
+# Exploratory Data Analysis
+
 ```{r}
-heartData <- read.csv("heart.csv")
-head(heartData)
+library(ggplot2)
+ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "HDC", y = "Cholesterol",
+       title = "Cholesterol levels across heart disease categories") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplot(heartData, aes(x = factor(hdc), y = trestbps, fill = factor(hdc))) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "HDC", y = "Resting Blood Pressure",
+       title = "Resting blood pressure across heart disease categories") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+ggplot(heartData, aes(x = factor(hdc), y = thalch, fill = factor(hdc))) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "HDC", y = "Maximum heart level",
+       title = "Maximum heart level across heart disease categories") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
+  geom_bar(position = "fill") +
+  labs(x = "Chest Pain Type",
+       y = "Proportion",
+       title = "Proportion of heart disease category by chest pain type",
+       fill = "hdc") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal()
+
+ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
+  geom_bar(position = "fill") +
+  labs(x = "Resting ECG Type",
+       y = "Proportion",
+       title = "Proportion of heart disease category by resting ECG",
+       fill = "hdc") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal()
+
+ggplot(heartData, aes(x = age, fill = factor(hdc))) +
+  geom_histogram(alpha = 0.7, position = "identity", bins = 40) +
+  labs(
+    x = "Age",
+    y = "Count",
+    fill = "HDC",
+    title = "Distribution of age across HDC"
+  ) +
+  theme_minimal()
+
 ```
 
-# Exploratory Data Analysis
+
+# Data Preparation 
 
 There are several variables in the dataset containing missing values.In order to prepare the data for the multinomial logistic model,we observed how many missing values each variable had and saw that the variables ca, thal, and slope had extremely high numbers of missing values. Because these variables are categorical, and because imputing such a large amount of missing data would introduce strong bias, we decided to remove them from the dataset.
 For the remaining numeric variables with less missing values- (trestbps, chol, thalach, oldpeak) we applied median imputation.
@@ -67,7 +118,10 @@ For the categorial variables with very few missing values, we replaced missing e
 
 This approach ensures that there are no missing values before using the multinomial logistic regression model.
 
-```{r}
+```{r, echo=FALSE}
+
+heartData <- read.csv("heart.csv")
+
 heartData$place   <- as.factor(heartData[["place"]])
 heartData$cp      <- as.factor(heartData[["cp"]])
 
