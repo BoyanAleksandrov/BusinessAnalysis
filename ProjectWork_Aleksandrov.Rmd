@@ -206,6 +206,9 @@ ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
   theme_minimal()
 ```
 
+After restecg vs hdc barplot:
+Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
+
 ```{r ecg_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
   geom_bar(position = "fill") +
@@ -216,6 +219,7 @@ ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal()
 ```
+
 
 ```{r age_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = age, fill = factor(hdc))) +
