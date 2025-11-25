@@ -49,8 +49,11 @@ header-includes:
 (Write about heart.csv here)
 
 # Data Preparation
-
-(Import data, convert factors, preprocessing...)
+```{r}
+heartData <- read.csv("heart.csv")
+head(heartData)
+```
+read.csv()
 
 # Exploratory Data Analysis
 
