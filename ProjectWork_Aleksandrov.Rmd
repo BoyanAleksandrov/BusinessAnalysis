@@ -43,6 +43,27 @@ header-includes:
 # Introduction
 
 "adsadsds"
+Before establishing the multinomial logistic regression model, we looked at some of the predictors' visual variations over the response variable hdc's various levels. This enables us to recognise potential patterns and comprehend which factors might be helpful in predicting the seriousness of heart disease.
+
+To investigate numerical factors like cholesterol, resting blood pressure, maximal heart rate, and ST depression, we employed boxplots. These charts illustrate the variations in these variables' distributions among the various categories of heart disease.
+
+To determine how the frequency of each category varies throughout the hdc levels, we made barplots for categorical variables including the type of chest discomfort and the resting ECG result.
+
+An introductory comprehension of the connections between predictors and the response variable is provided by this visual investigation.
+
+9999999
+
+After cholesterol boxplot:
+From the boxplot, cholesterol tends to be higher in some of the higher heart disease categories, although the variability overlaps across groups.
+
+After trestbps boxplot:
+Blood pressure appears to increase slightly for patients with higher heart disease categories, but the differences are not very clear.
+
+After cp vs hdc barplot:
+Certain chest pain types appear more often in higher heart disease categories, suggesting that chest pain type may be a useful predictor.
+
+After restecg vs hdc barplot:
+Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
 
 
 # Dataset Description
@@ -133,6 +154,7 @@ head(heartData)
 # Exploratory Data Analysis
 
 ```{r, echo=FALSE}
+
 library(ggplot2)
 ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
