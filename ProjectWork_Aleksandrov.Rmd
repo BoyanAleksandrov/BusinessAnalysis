@@ -210,7 +210,23 @@ ggplot(heartData, aes(x = age, fill = factor(hdc))) +
   theme_minimal()
 
 ```
+Distribution of age across HDC
+Patients with higher heart disease categories tend to be older, with the age distribution shifting toward later decades as HDC increases.
 
+Cholesterol levels across heart disease categories
+Cholesterol levels appear broadly similar across categories, though higher HDC groups show slightly more variability.
+
+ Resting blood pressure across heart disease categories
+Resting blood pressure shows a mild increasing trend with higher HDC, but overall differences between groups are modest.
+
+ Maximum heart rate across heart disease categories
+Patients with higher HDC values generally demonstrate lower maximum heart rates compared to those without heart disease.
+
+ Proportion of heart disease category by chest pain type
+Atypical and non-anginal chest pain types contain a higher proportion of severe heart disease cases compared to typical angina.
+
+ Proportion of heart disease category by resting ECG type
+ST-T abnormalities and LV hypertrophy are associated with a greater share of higher heart disease categories compared to normal ECG results.
 
 # Multinomial Logistic Regression
 
