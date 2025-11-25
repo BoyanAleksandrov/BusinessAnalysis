@@ -57,6 +57,16 @@ head(heartData)
 ```
 
 # Exploratory Data Analysis
+
+There are several variables in the dataset containing missing values.In order to prepare the data for the multinomial logistic model,we observed how many missing values each variable had and saw that the variables ca, thal, and slope had extremely high numbers of missing values. Because these variables are categorical, and because imputing such a large amount of missing data would introduce strong bias, we decided to remove them from the dataset.
+For the remaining numeric variables with less missing values- (trestbps, chol, thalach, oldpeak) we applied median imputation.
+
+We chose this method because replacing each missing value with the median of the corresponding variable is a robust measure that is not affected by extreme values. 
+
+For the categorial variables with very few missing values, we replaced missing entries with the most frequent category (the mode).
+
+This approach ensures that there are no missing values before using the multinomial logistic regression model.
+
 ```{r}
 heartData$place   <- as.factor(heartData[["place"]])
 heartData$cp      <- as.factor(heartData[["cp"]])
