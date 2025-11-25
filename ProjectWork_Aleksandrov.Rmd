@@ -161,8 +161,8 @@ To determine how the frequency of each category varies throughout the hdc levels
 An introductory comprehension of the connections between predictors and the response variable is provided by this visual investigation.
 
 
-After cholesterol boxplot:
-From the boxplot, cholesterol tends to be higher in some of the higher heart disease categories, although the variability overlaps across groups.
+Cholesterol levels across heart disease categories
+Cholesterol levels appear broadly similar across categories, though higher HDC groups show slightly more variability.
 ```{r chol_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 
 library(ggplot2)
@@ -174,8 +174,9 @@ ggplot(heartData, aes(x = factor(hdc), y = chol, fill = factor(hdc))) +
   theme(legend.position = "none")
 ```
 
-After Resting Blood Pressure boxplot:
-Blood pressure appears to increase slightly for patients with higher heart disease categories, but the differences are not very clear.
+
+Resting blood pressure across heart disease categories
+Resting blood pressure shows a mild increasing trend with higher HDC, but overall differences between groups are modest.
 
 ```{r rest_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = factor(hdc), y = trestbps, fill = factor(hdc))) +
@@ -187,6 +188,9 @@ ggplot(heartData, aes(x = factor(hdc), y = trestbps, fill = factor(hdc))) +
 
 ```
 
+Maximum heart rate across heart disease categories
+Patients with higher HDC values generally demonstrate lower maximum heart rates compared to those without heart disease.
+
 ```{r mheart_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = factor(hdc), y = thalch, fill = factor(hdc))) +
   geom_boxplot(alpha = 0.7) +
@@ -196,8 +200,9 @@ ggplot(heartData, aes(x = factor(hdc), y = thalch, fill = factor(hdc))) +
   theme(legend.position = "none")
 ```
 
-After cp vs hdc barplot:
-Certain chest pain types appear more often in higher heart disease categories, suggesting that chest pain type may be a useful predictor.
+Proportion of heart disease category by chest pain type
+Atypical and non-anginal chest pain types contain a higher proportion of severe heart disease cases compared to typical angina.
+
 
 ```{r cp_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
@@ -210,8 +215,8 @@ ggplot(heartData, aes(x = cp, fill = factor(hdc))) +
   theme_minimal()
 ```
 
-After restecg vs hdc barplot:
-Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
+Proportion of heart disease category by resting ECG type
+ST-T abnormalities and LV hypertrophy are associated with a greater share of higher heart disease categories compared to normal ECG results.
 
 ```{r ecg_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
@@ -224,6 +229,8 @@ ggplot(heartData, aes(x = restecg, fill = factor(hdc))) +
   theme_minimal()
 ```
 
+Distribution of age across HDC
+Patients with higher heart disease categories tend to be older, with the age distribution shifting toward later decades as HDC increases.
 
 ```{r age_plot, fig.pos='H', fig.height=4, fig.width=5, out.extra='clip', echo=FALSE}
 ggplot(heartData, aes(x = age, fill = factor(hdc))) +
@@ -255,6 +262,18 @@ Atypical and non-anginal chest pain types contain a higher proportion of severe 
  Proportion of heart disease category by resting ECG type
 ST-T abnormalities and LV hypertrophy are associated with a greater share of higher heart disease categories compared to normal ECG results.
 
+```{r}
+
+boxplot(age ~ sex, data = heartData,
+        names = c("Female", "Male"),
+        main = "Age Distribution by Sex",
+        xlab = "Sex",
+        ylab = "Age")
+
+t.test(age ~ sex, data = heartData)
+
+
+```
 # Multinomial Logistic Regression
 
 (Fit model + interpretation)
