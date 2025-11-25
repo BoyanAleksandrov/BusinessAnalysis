@@ -71,6 +71,21 @@ In this regression the response variable Y can take K-number of different catego
 We have to pick one of the categories to be the baseline - category 0, for every other category - k = 1,2...,K-1.
 
 The model shows the probability of an observation belonging to category K using the multinomial logistic regression function:
+
+$$
+P(Y = k \mid X) =
+\frac{\exp(\beta_{0k} + \beta_k^T X)}
+     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
+$$
+
+The probability of the baseline category is:
+
+$$
+P(Y = 0 \mid X) =
+\frac{1}
+     {1 + \sum_{j=1}^{K-1} \exp(\beta_{0j} + \beta_j^T X)}
+$$
+
 # Multinomial Logistic Regression
 
 (Fit model + interpretation)
