@@ -262,8 +262,29 @@ t.test(age ~ sex, data = heartData)
 ```
 # Multinomial Logistic Regression
 
-(Fit model + interpretation)
+We decided to fit the regression model using multinom() from the nnet, with hdc as the target variable and we included all of the predictors.
 
+The baseline category is choosen to be hdc = 0 and for each other category hdc = 1-4 the model estimates how much each predictor affects the odds of belonging to a category 1-4 versus the baseline.
+
+Multiple predictors appear as strong.
+Sex has a positive coefficient, indicating that males have higher chance of heart disease compared to females.
+Another one is exang. It increases the odds of being in any of the disease categories 1-4.
+In addition cp has a large negative indicating that certain chest pains reduces the risk of higher disease categories.
+
+Overall the model selects oldpeak, exang, cp and maximum heart rate as key predictors.
+
+```{r}
+
+library(nnet)
+multinomial_regression <- multinom(
+  hdc ~ age + sex + place +chol + cp + trestbps
+  +fbs + restecg + thalch + exang + oldpeak,
+  data = heartData
+)
+
+summary(multinomial_regression)
+
+```
 # Model Evaluation
 
 (Cross-validation)
