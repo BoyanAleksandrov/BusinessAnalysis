@@ -47,31 +47,15 @@ header-includes:
 
 # Introduction
 
-"adsadsds"
-
-
-9999999
-
-
-
-
-
-
-After restecg vs hdc barplot:
-Some Rest ECG categories show different frequencies across hdc levels, indicating a possible relationship.
-
-
-hist
-Histograms show the distribution of the numeric variables. Some variables are skewed (especially oldpeak), and the plots help us understand the data before modeling.
 
 # Dataset Description
 
-(Write about heart.csv here)
+For the project, we will be using a heart-disease dataset that contains health data for different patients.The dataset mixes numeric and categorical values such as age, sex, chest-pain type, resting blood pressure etc. The target variable of is hdc which indicates the category of heart disease each patient has (0-4).
+The dataset contains 920 rows with 15 variables in total.
+Out of these 15 variables, 14 are predictors and 1 is the target - hdc.
 
 
 # Multinomial Logistic Regression — Theory
-
-Question(1.1):
 
 We are using multinomial Logistic Regression because the response variable can take more than 2 categories.
 For these categories there is a separate set of coefficients and we choose one as the baseline. The coefficients
@@ -484,10 +468,29 @@ if (CV_choice == "K-Fold (K = 10)") {
 
 (Stepwise model / alternative model)
 
-# Binary Logistic Regression
+# Full logistic regression
 
-(Create hdc01 + logistic model)
+After fitting the full logistic regression model with hdc01 as the binary outcome, we can see that the significant predictors considering p-value (p < 0.05) are:
+- Sex
+- Place: Switzerland
+- place: VA Long Beach
+- cpatypical angina
+- cpnon-anginal
+- cptypical angina
+- fbs
+- exang
+- oldpeak
+```{r}
+heartData$hdc01 <- ifelse(heartData$hdc == 0, 0, 1)
+heartData$hdc01 <- factor(heartData$hdc01)
 
+full_logit <- glm(hdc01 ~ age + sex + place + cp + trestbps + chol + fbs +
+                    restecg + thalch + exang + oldpeak,
+                  data = heartData,
+                  family = binomial)
+
+summary(full_logit)
+```
 # Model Comparison
 
 (Compare multinomial vs binary)
