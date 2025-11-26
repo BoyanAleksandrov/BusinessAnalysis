@@ -304,7 +304,7 @@ summary(multinomial_regression)
 ```{r}
 students <- data.frame(
   name = c("Boyan Aleksandrov", "Maria Nishtelkova", "John Doe"),
-  date = as.Date(c("11-12-2005", "14-12-2005", "09-07-2005"), format = "%d-%m-%Y")
+  date = as.Date(c("11-12-2001", "14-12-2002", "09-07-2003"), format = "%d-%m-%Y")
 )
 
 distance <- as.Date("21-08-2020", format="%d-%m-%Y")
@@ -342,9 +342,7 @@ cat("CV Method:", CV_choice, "\n")
 # Define n ONCE for all CV choices
 n <- nrow(heartData)
 
-# ---------------------------------------------------------------------
-# VANILLA VALIDATION (70/30)
-# ---------------------------------------------------------------------
+
 if (CV_choice == "Vanilla validation set") {
   
   set.seed(seed_val)
@@ -353,7 +351,7 @@ if (CV_choice == "Vanilla validation set") {
   train_set <- heartData[trainIndices, ]
   test_set  <- heartData[-trainIndices, ]
   
-  # ensure target stays factor
+
   train_set$hdc <- factor(train_set$hdc)
   test_set$hdc  <- factor(test_set$hdc)
   
@@ -372,9 +370,7 @@ if (CV_choice == "Vanilla validation set") {
   cat("Accuracy:", round(accuracy, 3), " Error rate:", round(err, 3), "\n")
 }
 
-# ---------------------------------------------------------------------
-# LEAVE-ONE-OUT CROSS VALIDATION (LOO-CV)
-# ---------------------------------------------------------------------
+
 if (CV_choice == "LOO-CV") {
   
   loocv_preds <- vector("character", n)
@@ -402,9 +398,6 @@ if (CV_choice == "LOO-CV") {
   cat("Accuracy:", round(acc_loocv, 3), " Error:", round(err_loocv, 3), "\n")
 }
 
-# ---------------------------------------------------------------------
-# K-FOLD CROSS VALIDATION (K = 5)
-# ---------------------------------------------------------------------
 if (CV_choice == "K-Fold (K = 5)") {
   
   K <- 5
@@ -435,9 +428,7 @@ if (CV_choice == "K-Fold (K = 5)") {
   cat("Accuracy:", round(acc_kfold5, 3), " Error:", round(err_kfold5, 3), "\n")
 }
 
-# ---------------------------------------------------------------------
-# K-FOLD CROSS VALIDATION (K = 10)
-# ---------------------------------------------------------------------
+
 if (CV_choice == "K-Fold (K = 10)") {
   
   K <- 10
