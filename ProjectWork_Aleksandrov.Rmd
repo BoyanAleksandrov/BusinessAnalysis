@@ -260,7 +260,7 @@ ggplot(heartData, aes(x = age, fill = factor(hdc))) +
 ```
 By looking at the box plot and p-test results we can conclude that we do not have statistically significant evidence that males and females have different mean ages.
 
-With the p-test being bellow 0.05, we get the confirmation that the difference is not strong enough to be called significant.
+With the p-value being above 0.05, we get the confirmation that the difference is not strong enough to be called significant.
 
 ```{r}
 
@@ -301,10 +301,27 @@ summary(multinomial_regression)
 ```
 # Model Evaluation
 
-```{r}
+We tested our model using 4 different validation methods- Vanilla validation set, stratified validation,K-Fold Cross-Validation (K = 5) and K-Fold Cross Validation (K = 10), each giving different results.
+
+Here are the said results:
+
+The vanila validation gave us accuracy of around 0.565 and error rate of around 0.435.
+This is deffinetly the simplest approach we used which just splits data 70/30 allocating 70% for training and 30% of the data for testing.
+The problem with this is that is the split is unlucky the accuracy can change a lot.
+
+
+The stratified validation (70/30 split) gave us accuracy of around 0.604 and an error rate of around 0.396. This result is expected since hdc is imbalanced, for example category 4 is very rare, the validation avoids creating a training set that lacks classes.
+
+The k-fold cross validation for k = 5 gave us accuracy of around 0.170 and error rate of around 0.830.
+
+This happens because some folds may not contain some hdc categories, whenever this is the case the model cannot estimate the coefficients correctly and ends up predicting almost the same class for most observations.
+
+The k-fold cross validation for k = 10 gave us accuracy of around 0.175 and error rate of around 0.825, from which we conclude the same inefficiency as the model with the fewer folds because the problem is still the same - may not contain certain categories.
+
+```{r, echo=FALSE}
 students <- data.frame(
   name = c("Boyan Aleksandrov", "Maria Nishtelkova", "John Doe"),
-  date = as.Date(c("11-12-2001", "14-12-2002", "09-07-2003"), format = "%d-%m-%Y")
+  date = as.Date(c("11-12-2005", "14-12-2005", "09-07-2005"), format = "%d-%m-%Y")
 )
 
 distance <- as.Date("21-08-2020", format="%d-%m-%Y")
@@ -333,19 +350,23 @@ cv_methods <- c(
   "Vanilla validation set",
   "K-Fold (K = 5)",
   "K-Fold (K = 10)",
-  "LOO-CV"
+  "Stratified"
 )
 
 CV_choice <- sample(cv_methods, 1)
 cat("CV Method:", CV_choice, "\n")
+set.seed(seed_val) 
+CV_choice <- sample(cv_methods, 1)
 
+# Unlock randomness for the actual data splitting
+set.seed(NULL)
 # Define n ONCE for all CV choices
 n <- nrow(heartData)
 
 
 if (CV_choice == "Vanilla validation set") {
   
-  set.seed(seed_val)
+  
   trainIndices <- sample(seq_len(n), size = round(0.7 * n))
   
   train_set <- heartData[trainIndices, ]
@@ -370,34 +391,33 @@ if (CV_choice == "Vanilla validation set") {
   cat("Accuracy:", round(accuracy, 3), " Error rate:", round(err, 3), "\n")
 }
 
+if(CV_choice == "Stratified"){
 
-if (CV_choice == "LOO-CV") {
-  
-  loocv_preds <- vector("character", n)
-  
-  for (i in seq_len(n)) {
-    train_set <- heartData[-i, ]
-    test_set  <- heartData[i, , drop = FALSE]
-    
-    train_set$hdc <- factor(train_set$hdc)
-    test_set$hdc  <- factor(test_set$hdc)
-    
-    multinom_cv <- multinom(
-      hdc ~ age + sex + place + chol + cp + trestbps +
-        fbs + restecg + thalch + exang + oldpeak,
-      data = train_set,
-      trace = FALSE
-    )
-    
-    loocv_preds[i] <- predict(multinom_cv, test_set)
-  }
-  
-  acc_loocv <- mean(loocv_preds == heartData$hdc)
-  err_loocv <- 1 - acc_loocv
-  
-  cat("Accuracy:", round(acc_loocv, 3), " Error:", round(err_loocv, 3), "\n")
+
+n <- nrow(heartData)
+# Use the base R split for stratification:
+split_prop <- 0.7
+train_idx <- unlist(
+  lapply(split(seq_len(n), heartData$hdc), function(idx) {
+    sample(idx, size = round(length(idx) * split_prop))
+  })
+)
+train_set <- heartData[train_idx, ]
+test_set  <- heartData[-train_idx, ]
+train_set$hdc <- factor(train_set$hdc, levels = levels(heartData$hdc))
+test_set$hdc  <- factor(test_set$hdc, levels = levels(heartData$hdc))
+
+  multinom_regression <- multinom(
+    hdc ~ age + sex + place + chol + cp + trestbps +
+      fbs + restecg + thalch + exang + oldpeak,
+    data = train_set,
+    trace = FALSE
+  )
+pred <- predict(multinomial_regression, test_set)
+acc_strat <- mean(pred == test_set$hdc)
+err_strat <- 1 - acc_strat
+cat("Stratified validation Accuracy:", round(acc_strat, 3), "Error rate:", round(err_strat, 3), "\n")
 }
-
 if (CV_choice == "K-Fold (K = 5)") {
   
   K <- 5
